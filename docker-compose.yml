@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mysqldb:
+    image: mysql:latest
+    restart: always
+    environment:
+     #mv - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=welcome123
+      - MYSQL_DATABASE=inventory_service
+    expose:
+      - "3306"
+    volumes:
+      - db:/var/lib/mysql
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: inventory-service
+    image: inventory-service:latest
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+          SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/inventory_service?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: welcome123
+    depends_on:
+      - mysqldb
+volumes:
+  db:
+
