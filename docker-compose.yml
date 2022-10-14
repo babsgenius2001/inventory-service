@@ -4,11 +4,15 @@ services:
     image: mysql:latest
     restart: always
     environment:
-     #mv - MYSQL_ROOT_USER=root
-      - MYSQL_ROOT_PASSWORD=welcome123
-      - MYSQL_DATABASE=inventory_service
+      MYSQL_DATABASE: 'inventory_service'
+      MYSQL_ROOT_USER: 'root'
+      MYSQL_ROOT_PASSWORD: 'welcome123'
+      MYSQL_PASSWORD: 'welcome123'
+    ports:
+      - '3307:3306'
     expose:
-      - "3306"
+      # Opens port 3306 on the container
+      - '3306'
     volumes:
       - db:/var/lib/mysql
   app:
@@ -21,7 +25,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-          SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/inventory_service?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+          SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb/inventory_service?useSSL=false&allowPublicKeyRetrieval=true
           SPRING_DATASOURCE_USERNAME: root
           SPRING_DATASOURCE_PASSWORD: welcome123
     depends_on:
